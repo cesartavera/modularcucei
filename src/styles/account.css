@@ -1,0 +1,20 @@
+.UserAvatar{
+    display: flex;
+    justify-content: center;
+    margin-top: 5vw;
+}
+
+.infoUsuario{
+    display: flex;
+    flex-direction: column;
+    padding-top: 5vw;
+}
+
+.info{
+    display: flex;
+    flex-direction: row;
+    gap: 2vw;
+    justify-content: center;
+    align-items: center;
+    color: #30323B;
+}

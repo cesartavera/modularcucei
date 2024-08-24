@@ -1,0 +1,35 @@
+@import url(https://fonts.googleapis.com/css2?family=Grey+Qo&display=swap);
+
+
+header{
+    background-color: #f68774;
+    color: #30323B;
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.headerLabel{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    gap: 1.5vw;
+}
+
+.headerLabel h1{
+    margin: 0;
+    font-family: 'Grey Qo', cursive;
+}
+
+body{
+    background-color: #F6F6F6;
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
