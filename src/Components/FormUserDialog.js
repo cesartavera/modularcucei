@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { useState } from 'react';
+//Materials
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -21,6 +24,12 @@ export default function FormUserDialog() {
     setOpen(false);
   };
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -33,6 +42,51 @@ export default function FormUserDialog() {
     width: 1,
   });
 
+  const token = localStorage.getItem('token');
+    let decodedToken = null;
+
+    if(token){
+        try{
+            decodedToken = jwtDecode(token);
+        } catch(error){
+            console.error('Error decoding token: ', error);
+        }
+    }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    // Agregar email y nombre al FormData
+    formData.append('email', decodedToken.email);
+    formData.append('nombre', formData.get('name'));
+    formData.append('image', selectedFile);
+
+    try{
+      const response = await fetch('http://localhost:4000/user-profile/update-profile', {
+        method:'PUT',
+        headers:{
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.message === 'Profile updated successfully') {
+        localStorage.setItem('token', data.token);
+        alert('Profile updated successfully');
+        decodedToken = jwtDecode(data.token);
+        window.location.reload();
+        handleClose();
+      } else {
+        alert('Error al actualizar perfil');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Error al actualizar perfil');
+    }
+  };
+
   return (
     <React.Fragment>
       <Button variant="outlined" onClick={handleClickOpen}>
@@ -43,14 +97,7 @@ export default function FormUserDialog() {
         onClose={handleClose}
         PaperProps={{
           component: 'form',
-          onSubmit: (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
-            handleClose();
-          },
+          onSubmit: handleSubmit,
         }}
       >
         <DialogTitle>Update your information</DialogTitle>
@@ -68,6 +115,7 @@ export default function FormUserDialog() {
             type="text"
             fullWidth
             variant="standard"
+            defaultValue={decodedToken?.nombre}
           />
           <TextField
             autoFocus
@@ -79,26 +127,8 @@ export default function FormUserDialog() {
             type="email"
             fullWidth
             variant="standard"
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="password"
-            name="password"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="passwordConfirmation"
-            name="passwordConfirmation"
-            label="Password Confirmation"
-            type="password"
-            fullWidth
-            variant="standard"
+            defaultValue={decodedToken?.email}
+            disabled
           />
           <Button
             component="label"
@@ -109,12 +139,12 @@ export default function FormUserDialog() {
             sx={{marginTop:'10px'}}
             >
             Upload Image
-            <VisuallyHiddenInput type="file" />
+            <VisuallyHiddenInput type="file" name="image" onChange={handleFileChange}/>
           </Button>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Subscribe</Button>
+          <Button type="submit">Update</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

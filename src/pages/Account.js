@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { jwtDecode } from 'jwt-decode';
 //Styles
 import '../styles/home.css';
 import '../styles/account.css';
@@ -14,6 +15,16 @@ import Typography from '@mui/material/Typography';
 import OrdenaYa from '../assets/images/oy-icon.jpg';
 
 function Account(){
+    const token = localStorage.getItem('token');
+    let decodedToken = null;
+
+    if(token){
+        try{
+            decodedToken = jwtDecode(token);
+        } catch(error){
+            console.error('Error decoding token: ', error);
+        }
+    }
     return(
         <div>
             <header>
@@ -30,16 +41,16 @@ function Account(){
                 <ImageAvatars />
                 <Divider />
                 <div className='UserAvatar'>
-                    <Avatar alt='User Prueba' src={OrdenaYa} sx={{width:'35vw', height:'35vw'}}/>   
+                    <Avatar alt='User Prueba' src={decodedToken?.imagenPerfil} sx={{width:'35vw', height:'35vw'}}/>   
                 </div>
                 <div className='infoUsuario'>
                     <div className='info'>
                         <Typography variant='overline'>Usuario: </Typography>
-                        <Typography variant='caption'>Placeholder Usuario</Typography>
+                        <Typography variant='caption'>{decodedToken?.nombre}</Typography>
                     </div>
                     <div className='info'>
                         <Typography variant='overline'>Correo: </Typography>
-                        <Typography variant='caption'>Placeholder Correo</Typography>
+                        <Typography variant='caption'>{decodedToken?.email}</Typography>
                     </div>
                     <div className='info'>
                         <FormUserDialog />

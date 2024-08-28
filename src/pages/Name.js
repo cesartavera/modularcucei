@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 //Materials
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -15,6 +15,7 @@ function Name(){
     const [name, setName]= React.useState('');
     const [error, setError] = React.useState(false);
     //decalaracion de navegacion entre paginas
+    const location = useLocation();
     const navigate = useNavigate();
     const handleNavigatePrevious = () =>{
         navigate('/Email');
@@ -23,7 +24,7 @@ function Name(){
         if (name.trim() === '') {
             setError(true);
         } else {
-            navigate('/Newpassword');
+            navigate('/Newpassword', {state:{email: location.state.email, name}});
         }
     };
 

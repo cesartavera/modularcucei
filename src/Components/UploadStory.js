@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { useState } from 'react';
 //Materials
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,17 +13,58 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 
 export default function UploadStory({open, onClose}) {
-    const VisuallyHiddenInput = styled('input')({
-        clip: 'rect(0 0 0 0)',
-        clipPath: 'inset(50%)',
-        height: 1,
-        overflow: 'hidden',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        whiteSpace: 'nowrap',
-        width: 1,
-      });
+  const VisuallyHiddenInput = styled('input')({
+      clip: 'rect(0 0 0 0)',
+      clipPath: 'inset(50%)',
+      height: 1,
+      overflow: 'hidden',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      whiteSpace: 'nowrap',
+      width: 1,
+    });
+  
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const token = localStorage.getItem('token');
+  let decodedToken = null;
+
+  if(token){
+      try{
+          decodedToken = jwtDecode(token);
+      } catch(error){
+          console.error('Error decoding token: ', error);
+      }
+  }
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.currentTarget);
+
+  formData.append('email', decodedToken.email);
+  formData.append('title', formData.get('title'));
+  formData.append('comments', formData.get('comments'));
+  formData.append('image', selectedFile);
+
+  try{
+    const response = await fetch('http://localhost:4000/',{
+      method: 'POST',
+      headers:{
+        'Authorization': `Bearer ${token}`,
+      },
+      body:formData,
+    });
+
+    const data = await response.json();
+  } catch(error){}
+  
+  onClose();
+};
 
   return (
     <React.Fragment>
@@ -30,14 +73,7 @@ export default function UploadStory({open, onClose}) {
         onClose={onClose}
         PaperProps={{
           component: 'form',
-          onSubmit: (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
-            
-          },
+          onSubmit: handleSubmit,
         }}
       >
         <DialogTitle>Upload your story</DialogTitle>
@@ -76,7 +112,7 @@ export default function UploadStory({open, onClose}) {
             sx={{marginTop:'10px'}}
             >
             Upload Image
-            <VisuallyHiddenInput type="file" />
+            <VisuallyHiddenInput type="file" name="image" onChange={handleFileChange} />
           </Button>
         </DialogContent>
         <DialogActions>

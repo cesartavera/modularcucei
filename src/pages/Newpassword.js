@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 //Materials
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -18,12 +18,12 @@ import Alert from '@mui/material/Alert';
 
 function Newpassword(){
     //declaracion de valores contraseña
-    const [keyPassword, setkeyPassword]= React.useState('');
+    const [password, setPassword]= React.useState('');
     const [error, setError] = React.useState(false);
-    const provisionalPassword = 'test';
+    const location = useLocation();
     
     //declaracion de valores confirmacion de contraseña
-    const [keyPasswordConfirmation, setkeyPasswordConfirmation]= React.useState('');
+    const [passwordConfirmation, setPasswordConfirmation]= React.useState('');
     const [errorMessage, setErrorMessage] = React.useState('');
 
     //declaracion de navegacion entre paginas
@@ -31,15 +31,33 @@ function Newpassword(){
     const handleNavigatePrevious = () =>{
         navigate('/Name');
     };
-    const handleNext = () =>{
-        if (keyPassword.trim() === '') {
+    const handleNext = async () =>{
+        if (password.trim() === '') {
             setError(true);
             setErrorMessage('El campo no puede estar vacio');
-        } else if (keyPassword.trim() === ''){
-            setError(true);
-            setErrorMessage('El campo no puede estar vacio');
-        } else if (keyPassword === keyPasswordConfirmation){
-            navigate('/Home');
+        } else if (password === passwordConfirmation){
+            try{
+                const response = await fetch('http://localhost:4000/user-profile/register', {
+                    method:'POST',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: location.state.email,
+                        nombre: location.state.name,
+                        password
+                    })
+                });
+
+                const data = await response.json();//
+
+                if(data.valid){
+                    localStorage.setItem('token',data.token);
+                    navigate('/Home');
+                }
+            } catch(error){
+                console.error('Error: ', error);
+            }
         } else {
             setError(true);
             setErrorMessage('La contraseña no coincide en ambos campos');
@@ -67,8 +85,8 @@ function Newpassword(){
                         id="newpassword"
                         name='newpassword'
                         fullWidth
-                        value={keyPassword}
-                        onChange={(e) => setkeyPassword(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         type={showPassword ? 'text' : 'password'}
                         endAdornment={
                         <InputAdornment position="end">
@@ -95,8 +113,8 @@ function Newpassword(){
                         id="newpassword"
                         name='newpassword'
                         fullWidth
-                        value={keyPasswordConfirmation}
-                        onChange={(e) => setkeyPasswordConfirmation(e.target.value)}
+                        value={passwordConfirmation}
+                        onChange={(e) => setPasswordConfirmation(e.target.value)}
                         type={showPassword ? 'text' : 'password'}
                         endAdornment={
                         <InputAdornment position="end">

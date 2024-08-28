@@ -27,7 +27,7 @@ function Email(){
         if (email.trim() === ''){
             setError(true);
             setErrorMessage('El campo no puede estar vacio');
-        }else if(emailRegex.test(email) == false){
+        }else if(emailRegex.test(email) === false){
             setError(true);
             setErrorMessage('Direccion con formato invalido');
         } else {
@@ -44,7 +44,7 @@ function Email(){
                 if (data.exists){
                     navigate('/Password', {state:{email}});
                 } else {
-                    navigate('/Name');
+                    navigate('/Name', {state:{email}});
                 }
             } catch (error){
                 console.error('Error: ', error);

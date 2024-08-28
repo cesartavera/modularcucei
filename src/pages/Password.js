@@ -50,9 +50,11 @@ function Password(){
                 const data = await response.json();
 
                 if (data.valid) {
+                    localStorage.setItem('token', data.token);
                     navigate('/Home');
                 } else {
                     setError(true);
+                    setErrorMessage('Contraseña incorrecta');
                 }
             } catch (error) {
                 console.error('Error:', error);
