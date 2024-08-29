@@ -11,30 +11,30 @@ import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 //Assets
-import PeopleDinner from '../assets/images/peopleDinner.jpg';
 
-export default function ReviewItem(){
+
+export default function ReviewItem({story}){
+    const title = Array.isArray(story.title) ? story.title.join(' ') : story.title;
+    const comments = Array.isArray(story.comments) ? story.comments.join(' ') : story.comments;
+
     return(
         <Card sx={{width:'auto', bgcolor:'#F6F6F6'}}>
             <CardHeader 
                 avatar={
-                    <Avatar>
-                        R
-                    </Avatar>}
-                title='PlaceHolde Title'
-                subheader='Placeholder Date'
+                    <Avatar src={story.userProfileImage} alt={"foto"} />
+                }
+                title={title}
+                subheader={new Date(story.date).toLocaleDateString()}
             />
             <CardMedia 
                 component='img'
                 height='250vw'
-                image={PeopleDinner}
-                alt='placeholderImg'
+                image={story.imagenStory}
+                alt={title}
             />
             <CardContent>
                 <Typography variant='body2' color='text.secondary'>
-                This impressive paella is a perfect party dish and a fun meal to cook
-                together with your guests. Add 1 cup of frozen peas along with the mussels,
-                if you like.
+                    {comments}
                 </Typography>
             </CardContent>
             <CardActions sx={{justifyContent:'flex-end'}}>

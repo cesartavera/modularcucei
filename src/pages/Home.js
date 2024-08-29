@@ -12,6 +12,22 @@ import Avatar from '@mui/material/Avatar';
 import OrdenaYa from '../assets/images/oy-icon.jpg'
 
 function Home(){
+    const [stories, setStories] = React.useState([]);
+
+    React.useEffect(() => {
+        const fetchStories = async () => {
+            try{
+                const response = await fetch('http://localhost:4000/user-stories/stories');
+                const data = await response.json();
+                console.log('Response Text: ', data);
+                
+                setStories(data.stories);
+            } catch(error){
+                console.error('Error fetching stories: ', error);
+            }
+        };
+        fetchStories();
+    }, []);
     return(
         <div>
             <header>
@@ -26,9 +42,9 @@ function Home(){
             </header>
             <body>
                 <ImageAvatars />
-                <ReviewItem />
-                <ReviewItem />
-                <ReviewItem />
+                {stories.map((story, index) => (
+                    <ReviewItem key={index} story={story} />
+                ))}
                 <div style={{height:'60px'}}></div>
             </body>
             <footer>

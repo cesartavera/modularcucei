@@ -47,12 +47,10 @@ const handleSubmit = async (event) => {
   const formData = new FormData(event.currentTarget);
 
   formData.append('email', decodedToken.email);
-  formData.append('title', formData.get('title'));
-  formData.append('comments', formData.get('comments'));
   formData.append('image', selectedFile);
 
   try{
-    const response = await fetch('http://localhost:4000/',{
+    const response = await fetch('http://localhost:4000/user-stories/story',{
       method: 'POST',
       headers:{
         'Authorization': `Bearer ${token}`,
@@ -61,9 +59,17 @@ const handleSubmit = async (event) => {
     });
 
     const data = await response.json();
-  } catch(error){}
-  
-  onClose();
+
+    if (data.message === 'Story uploaded successfully'){
+      alert('Story uploaded successfully');
+      onClose();
+    } else {
+      alert('Error on upload');
+    }
+  } catch(error){
+    console.error('Error uploading story: ', error);
+    alert('Error uploading story');
+  }
 };
 
   return (
@@ -96,9 +102,9 @@ const handleSubmit = async (event) => {
             autoFocus
             required
             margin="dense"
-            id="comments"
+            id="Comments"
             name="comments"
-            label="comments"
+            label="Comments"
             type="text"
             fullWidth
             variant="standard"

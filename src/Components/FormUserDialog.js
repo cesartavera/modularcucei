@@ -79,11 +79,11 @@ export default function FormUserDialog() {
         window.location.reload();
         handleClose();
       } else {
-        alert('Error al actualizar perfil');
+        alert('Error updating profile');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Error al actualizar perfil');
+      alert('Error updating profile');
     }
   };
 
