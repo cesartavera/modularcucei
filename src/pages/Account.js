@@ -25,6 +25,9 @@ function Account(){
             console.error('Error decoding token: ', error);
         }
     }
+
+    const imageUrl = decodedToken?.imagenPerfil?.replace('localhost', '192.168.100.5');
+
     return(
         <div>
             <header>
@@ -41,7 +44,7 @@ function Account(){
                 <ImageAvatars />
                 <Divider />
                 <div className='UserAvatar'>
-                    <Avatar alt='User Prueba' src={decodedToken?.imagenPerfil} sx={{width:'35vw', height:'35vw'}}/>   
+                    <Avatar alt='User Prueba' src={imageUrl} sx={{width:'35vw', height:'35vw'}}/>   
                 </div>
                 <div className='infoUsuario'>
                     <div className='info'>

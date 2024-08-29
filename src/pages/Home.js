@@ -13,21 +13,42 @@ import OrdenaYa from '../assets/images/oy-icon.jpg'
 
 function Home(){
     const [stories, setStories] = React.useState([]);
+    const [page, setPage] = React.useState(1);
+    const[hasMore, setHasMore] = React.useState(true);
 
+    // Fetch stories from the backend based on the current page
+    const fetchStories = async (currentPage) => {
+        try {
+        const response = await fetch(
+            `http://192.168.100.5:4000/user-stories/stories?page=${currentPage}&limit=10`
+        );
+        const data = await response.json();
+
+        // Update stories state, ensuring no duplication
+        if (currentPage === 1) {
+            setStories(data.stories); // On first page load, set stories directly
+        } else {
+            setStories((prevStories) => [...prevStories, ...data.stories]);
+        }
+
+        // Check if there are more stories to load
+        setHasMore(data.stories.length > 0);
+        } catch (error) {
+        console.error('Error fetching stories: ', error);
+        }
+    };
+
+    // Effect to load stories when page changes
     React.useEffect(() => {
-        const fetchStories = async () => {
-            try{
-                const response = await fetch('http://localhost:4000/user-stories/stories');
-                const data = await response.json();
-                console.log('Response Text: ', data);
-                
-                setStories(data.stories);
-            } catch(error){
-                console.error('Error fetching stories: ', error);
-            }
-        };
-        fetchStories();
-    }, []);
+        fetchStories(page);
+    }, [page]);
+
+    const loadMore = () => {
+        if (hasMore) {
+            setPage(prevPage => prevPage + 1);
+        }
+    };
+
     return(
         <div>
             <header>
@@ -40,13 +61,16 @@ function Home(){
                     <Divider textAlign='right'>UdeG</Divider>
                 </div>
             </header>
-            <body>
+            <main>
                 <ImageAvatars />
                 {stories.map((story, index) => (
                     <ReviewItem key={index} story={story} />
                 ))}
+                {hasMore && (
+                    <button onClick={loadMore}>Load More</button>
+                )}
                 <div style={{height:'60px'}}></div>
-            </body>
+            </main>
             <footer>
                 <SimpleBottomNavigation />
             </footer>

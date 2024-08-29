@@ -8,7 +8,6 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import RestoreIcon from '@mui/icons-material/Restore';
 import DiscountIcon from '@mui/icons-material/Discount';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
@@ -28,6 +27,9 @@ export default function SimpleBottomNavigation() {
             console.error('Error decoding token: ', error);
         }
     }
+
+  const imageUrl = decodedToken?.imagenPerfil?.replace('localhost', '192.168.100.5');
+
 
   const [value, setValue] = React.useState(0);
   const location = useLocation();
@@ -88,7 +90,7 @@ export default function SimpleBottomNavigation() {
         />
         <UploadStory open={open} onClose={handleClose} />
         <BottomNavigationAction LinkComponent={Link} to='/Ordenes' label="Ordenes" icon={<StyledBadge badgeContent={4} color='secondary'><LocalGroceryStoreIcon /></StyledBadge>} />
-        <BottomNavigationAction LinkComponent={Link} to='/Account' label="Cuenta" icon={<Avatar alt='User Prueba' src={decodedToken?.imagenPerfil} sx={{height:'28px', width:'28px'}}/>} />
+        <BottomNavigationAction LinkComponent={Link} to='/Account' label="Cuenta" icon={<Avatar alt='User Prueba' src={imageUrl} sx={{height:'28px', width:'28px'}}/>} />
       </BottomNavigation>
     </Box>
   );

@@ -63,7 +63,7 @@ export default function FormUserDialog() {
     formData.append('image', selectedFile);
 
     try{
-      const response = await fetch('http://localhost:4000/user-profile/update-profile', {
+      const response = await fetch('http://192.168.100.5:4000/user-profile/update-profile', {
         method:'PUT',
         headers:{
           'Authorization': `Bearer ${token}`,

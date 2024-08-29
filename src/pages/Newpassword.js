@@ -37,7 +37,7 @@ function Newpassword(){
             setErrorMessage('El campo no puede estar vacio');
         } else if (password === passwordConfirmation){
             try{
-                const response = await fetch('http://localhost:4000/user-profile/register', {
+                const response = await fetch('http://192.168.100.5:4000/user-profile/register', {
                     method:'POST',
                     headers:{
                         'Content-Type': 'application/json'

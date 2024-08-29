@@ -50,7 +50,7 @@ const handleSubmit = async (event) => {
   formData.append('image', selectedFile);
 
   try{
-    const response = await fetch('http://localhost:4000/user-stories/story',{
+    const response = await fetch('http://192.168.100.5:4000/user-stories/story',{
       method: 'POST',
       headers:{
         'Authorization': `Bearer ${token}`,
@@ -63,6 +63,7 @@ const handleSubmit = async (event) => {
     if (data.message === 'Story uploaded successfully'){
       alert('Story uploaded successfully');
       onClose();
+      window.location.reload();
     } else {
       alert('Error on upload');
     }

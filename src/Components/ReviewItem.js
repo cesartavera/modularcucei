@@ -17,11 +17,15 @@ export default function ReviewItem({story}){
     const title = Array.isArray(story.title) ? story.title.join(' ') : story.title;
     const comments = Array.isArray(story.comments) ? story.comments.join(' ') : story.comments;
 
+    const userImage = story.userProfileImage?.replace('localhost', '192.168.100.5');
+    //const storyImage = story.imagenStory?.replace('localhost', '192.168.100.5');
+
+
     return(
         <Card sx={{width:'auto', bgcolor:'#F6F6F6'}}>
             <CardHeader 
                 avatar={
-                    <Avatar src={story.userProfileImage} alt={"foto"} />
+                    <Avatar src={userImage} alt={"foto"} />
                 }
                 title={title}
                 subheader={new Date(story.date).toLocaleDateString()}

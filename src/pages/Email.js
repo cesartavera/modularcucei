@@ -32,7 +32,7 @@ function Email(){
             setErrorMessage('Direccion con formato invalido');
         } else {
             try{
-                const response = await fetch('http://localhost:4000/auth/validate-email', {
+                const response = await fetch('http://192.168.100.5:4000/auth/validate-email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

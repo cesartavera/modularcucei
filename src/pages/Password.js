@@ -40,7 +40,7 @@ function Password(){
             setErrorMessage('El campo no puede estar vacio');
         } else {
             try {
-                const response = await fetch('http://localhost:4000/auth/validate-password', {
+                const response = await fetch('http://192.168.100.5:4000/auth/validate-password', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -102,7 +102,7 @@ function Password(){
                     />
                 </FormControl>
             </Box>
-            <Button variant="text" onClick={handleForgot} sx={{marginLeft:'3vw', fontSize:'2vw'}}>Olvidaste contraseña?</Button>
+            <Button variant="text" onClick={handleForgot} sx={{marginLeft:'10px', fontSize:'10px'}}>Olvidaste contraseña?</Button>
             <Box sx={{display:'flex', position:'absolute', bottom:'0', justifyContent:'space-between', width:'85%', marginLeft:'30px', marginBottom:'15px'}}>
                 <IconButton onClick={handleNavigatePrevious}>
                     <ArrowBackIcon/>
