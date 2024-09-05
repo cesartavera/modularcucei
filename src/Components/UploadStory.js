@@ -50,7 +50,7 @@ const handleSubmit = async (event) => {
   formData.append('image', selectedFile);
 
   try{
-    const response = await fetch('http://192.168.100.5:4000/user-stories/story',{
+    const response = await fetch('http://localhost:4000/user-stories/story',{
       method: 'POST',
       headers:{
         'Authorization': `Bearer ${token}`,

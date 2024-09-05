@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useCart } from './CartContext';
 //Styles
 import '../styles/ordenActual.css';
 //Materials
@@ -8,44 +9,61 @@ import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Divider from '@mui/material/Divider';
 
-export default function OrdenActual(){
-    const [quantity, setQuantity] = React.useState(0);
+export default function OrdenActual({product, onRemove}){
+    const { dispatch } = useCart();
 
     const handleAdd = () =>{
-        setQuantity(prevQuantity => prevQuantity + 1);
+        dispatch({
+            type: 'ADD_TO_CART',
+            payload: { ...product, quantity: 1 } // Aumenta la cantidad del producto
+        });
     };
 
     const handleRemove = () =>{
-        setQuantity(prevQuantity => (prevQuantity > 0 ? prevQuantity - 1 : 0));
+        if (product.quantity > 1) {
+            dispatch({
+                type: 'ADD_TO_CART',
+                payload: { ...product, quantity: -1 } // Reduce la cantidad del producto
+            });
+        } else {
+            onRemove(product.id); // Eliminar producto si la cantidad es 0
+        }
     };
 
     const handleDelete = () =>{
-        setQuantity(0);
+        onRemove(product.instanceId);
     };
 
-    const handleSubmit = () =>{
-        console.log(quantity);
-    }
+    const totalPrice = product.price * product.quantity;
 
     return(
-        <Box className='ordenActualCard'>
-            <Box className='product'>
-                <Typography variant='overline'>Pizza Peperoni</Typography>
-            </Box>
-            <Box className='botonesOrdenActual'>
-                <IconButton aria-label='add' size='small' onClick={handleAdd}>
-                    <AddCircleOutlineIcon fontSize='small'/>
-                </IconButton>
-                <Box className='itemCountOrden'>
-                    <Typography variant='body2'color='text.secondary'>{quantity}</Typography>
+        <Box className='BoxItem'>
+            <img src={product.image} alt={product.name} id='menuItem'/>
+            <Divider  orientation='vertical' flexItem/>
+            <Box>
+                <Box className='BoxDescription'>
+                    <Box sx={{display:'flex',gap:'20px'}}>
+                        <Typography variant='overline'sx={{fontWeight:'bold'}}>{product.name}</Typography>
+                        <Typography variant='overline'>${totalPrice}</Typography>
+                    </Box>
+                    <Typography variant='caption'>{product.description}</Typography>
                 </Box>
-                <IconButton aria-label='remove' size='small' onClick={handleRemove}>
-                    <RemoveCircleOutlineIcon fontSize='small'/>
-                </IconButton>
-                <IconButton aria-label='addCar' onClick={handleDelete}>
-                    <DeleteIcon />
-                </IconButton>
+                <Box className='Buttons'>
+                    <IconButton aria-label='add' size='small' onClick={handleAdd}>
+                        <AddCircleOutlineIcon fontSize='small'/>
+                    </IconButton>
+                    <Box className='itemCount'>
+                        <Typography variant='body2'color='text.secondary'>{product.quantity}</Typography>
+                    </Box>
+                    <IconButton aria-label='remove' size='small' onClick={handleRemove}>
+                        <RemoveCircleOutlineIcon fontSize='small'/>
+                    </IconButton>
+                    <IconButton aria-label='addCar' onClick={handleDelete}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Box>
             </Box>
         </Box>
     );

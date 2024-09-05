@@ -1,5 +1,6 @@
 
 import * as React from 'react';
+import { useCart } from './CartContext';
 //Styles
 import '../styles/menuItem.css';
 //Materials
@@ -11,9 +12,11 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import Divider from '@mui/material/Divider';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 //Assets
-import Pizza from '../assets/images/pizza.jpg';
 
-export default function MenuItem(){
+
+export default function MenuItem({product}){
+    const { dispatch } = useCart();
+
     const [quantity, setQuantity] = React.useState(0);
 
     const handleAdd = () =>{
@@ -24,24 +27,35 @@ export default function MenuItem(){
         setQuantity(prevQuantity => (prevQuantity > 0 ? prevQuantity - 1 : 0));
     };
 
-    const handleDelete = () =>{
-        setQuantity(0);
+    const handleAddToCart = () =>{
+        dispatch({
+            type: 'ADD_TO_CART',
+            payload: {
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                image: product.image,
+                price: product.price,
+                quantity: quantity,
+                instanceId: new Date().getTime(),
+            },
+        });
+        setQuantity(0)
     };
-
-    const handleSubmit = () =>{
-        console.log(quantity);
-    }
 
     return(
         <Box className='BoxItem'>
-            <img src={Pizza} id='menuItem'/>
+            <img src={product.image} alt={product.name} id='menuItem'/>
             <Divider  orientation='vertical' flexItem/>
             <Box>
                 <Box className='BoxDescription'>
-                    <Typography variant='overline'>Pizza Peperoni</Typography>
-                    <Typography variant='caption'>Pizza Peperoniasasa</Typography>
+                    <Box sx={{display:'flex',gap:'20px'}}>
+                    <Typography variant='overline'sx={{fontWeight:'bold'}}>{product.name}</Typography>
+                    <Typography variant='overline'>${product.price}</Typography>
+                    </Box>
+                    <Typography variant='caption'>{product.description}</Typography>
                 </Box>
-                <Box className='Buttons'>
+                <Box className='Buttons'> 
                     <IconButton aria-label='add' size='small' onClick={handleAdd}>
                         <AddCircleOutlineIcon fontSize='small'/>
                     </IconButton>
@@ -51,7 +65,7 @@ export default function MenuItem(){
                     <IconButton aria-label='remove' size='small' onClick={handleRemove}>
                         <RemoveCircleOutlineIcon fontSize='small'/>
                     </IconButton>
-                    <IconButton aria-label='addCar' onClick={handleDelete}>
+                    <IconButton aria-label='addCar' onClick={handleAddToCart}>
                         <LocalGroceryStoreIcon />
                     </IconButton>
                 </Box>

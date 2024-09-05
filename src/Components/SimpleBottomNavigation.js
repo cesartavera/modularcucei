@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { useCart } from './CartContext';
 //Materials
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -17,6 +18,10 @@ import Avatar from '@mui/material/Avatar';
 import UploadStory from './UploadStory';
 
 export default function SimpleBottomNavigation() {
+  const { cart } = useCart();
+
+  const totalItems = cart.reduce((total, product) => total + product.quantity, 0);
+
   const token = localStorage.getItem('token');
     let decodedToken = null;
 
@@ -89,7 +94,7 @@ export default function SimpleBottomNavigation() {
           onClick={handleClickOpen}
         />
         <UploadStory open={open} onClose={handleClose} />
-        <BottomNavigationAction LinkComponent={Link} to='/Ordenes' label="Ordenes" icon={<StyledBadge badgeContent={4} color='secondary'><LocalGroceryStoreIcon /></StyledBadge>} />
+        <BottomNavigationAction LinkComponent={Link} to='/Ordenes' label="Ordenes" icon={<StyledBadge badgeContent={totalItems} color='secondary'><LocalGroceryStoreIcon /></StyledBadge>} />
         <BottomNavigationAction LinkComponent={Link} to='/Account' label="Cuenta" icon={<Avatar alt='User Prueba' src={imageUrl} sx={{height:'28px', width:'28px'}}/>} />
       </BottomNavigation>
     </Box>

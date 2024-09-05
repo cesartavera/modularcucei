@@ -12,6 +12,27 @@ import OrdenaYa from '../assets/images/oy-icon.jpg'
 
 
 function Menu(){
+    const [products, setProducts] = React.useState([]);
+
+    React.useEffect(() => {
+        const fetchProducts = async () => {
+            try{
+                const response = await fetch('http://192.168.100.5:4000/menu-routes/products');
+                const data = await response.json();
+                setProducts(data.products);
+            } catch(error) {
+                console.error('Error fetching products: ', error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    const pizzas = products.filter(product => product.category=== 'Pizza');
+    const burgers = products.filter(product => product.category === 'Hamburguesa');
+    const alitas = products.filter(product => product.category === 'Alitas');
+    const drinks = products.filter(product => product.category === 'Bebidas');
+
     return(
         <div>
             <header>
@@ -24,30 +45,28 @@ function Menu(){
                     <Divider textAlign='right'>UdeG</Divider>
                 </div>
             </header>
-            <body>
+            <main>
                 <ImageAvatars />
                 <Typography variant='h4' color={'#30323B'} textAlign={'center'}>Menu</Typography>
                 <Divider />
                 <Divider textAlign='left'>
                     <Typography variant='h6' color={'#30323B'}>Pizzas</Typography>
                 </Divider>
-                <MenuItem />
-                <MenuItem />
-                <MenuItem />
+                {pizzas.map((product) => (<MenuItem  key={product._id} product={product}/>))}
                 <Divider textAlign='left'>
                     <Typography variant='h6' color={'#30323B'}>Burguers</Typography>
                 </Divider>
-                <MenuItem />
-                <MenuItem />
-                <MenuItem />
+                {burgers.map((product) => (<MenuItem  key={product._id} product={product}/>))}
+                <Divider textAlign='left'>
+                    <Typography variant='h6'color={'#30323B'}>Alitas</Typography>
+                </Divider>
+                {alitas.map((product) => (<MenuItem  key={product._id} product={product}/>))}
                 <Divider textAlign='left'>
                     <Typography variant='h6'color={'#30323B'}>Bebidas</Typography>
                 </Divider>
-                <MenuItem />
-                <MenuItem />
-                <MenuItem />
+                {drinks.map((product) => (<MenuItem  key={product._id} product={product}/>))}
                 <div style={{height:'60px'}}></div>
-            </body>
+            </main>
             <footer>
                 <SimpleBottomNavigation />
             </footer>

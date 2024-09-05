@@ -28,9 +28,7 @@ function Cupones(){
                 <ImageAvatars />
                 <Typography variant='h4' color={'#30323B'} textAlign={'center'}>Cupones</Typography>
                 <Divider />
-                <MenuItem />
-                <MenuItem />
-                <MenuItem />
+
                 <div style={{height:'60px'}}></div> 
             </body>
             <footer>
